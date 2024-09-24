@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Like } from 'src/modules/like/schema/like.schema';
 import { Post } from 'src/modules/post/schema/post.schema';
 
-export type UserDocment = User & Document;
+export type UserDocument = User & Document;
 
 @Schema()
 export class User {
@@ -13,16 +13,16 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: false })
+  @Prop()
   bio?: string;
 
   @Prop({ required: false, name: 'profile_picture' })
   profilePicture?: string;
 
-  @Prop({ type: [{ type: 'ObjectId', ref: 'Post' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Post' }] })
   posts: Post[];
 
-  @Prop({ type: [{ type: 'ObjectId', ref: 'Like' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Like' }] })
   likes: Like[];
 }
 

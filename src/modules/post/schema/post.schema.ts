@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Like } from 'src/modules/like/schema/like.schema';
 import { User } from 'src/modules/user/schema/user.schema';
 
@@ -16,10 +16,10 @@ export class Post {
   @Prop({ type: [String], required: false })
   images?: string[];
 
-  @Prop({ type: 'ObjectId', ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   user: User;
 
-  @Prop({ type: [{ type: 'ObjectId', ref: 'Like' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Like' }] })
   likes: Like[];
 }
 

@@ -21,9 +21,6 @@ export class User {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Post' }] })
   posts: Post[];
-
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Like' }] })
-  likes: Like[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

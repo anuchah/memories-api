@@ -21,6 +21,9 @@ export class Post {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Like' }] })
   likes: Like[];
+
+  @Prop({ type: Number, default: 0 })
+  likeCount: Number;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

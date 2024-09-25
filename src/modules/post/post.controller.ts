@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Request,
   UploadedFiles,
@@ -12,10 +14,15 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../auth/auth.guard';
+import { LikeDto } from '../like/dto/like.dto';
+import { LikeService } from '../like/like.service';
 
 @Controller('post')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private likeService: LikeService,
+  ) {}
 
   @UseGuards(AuthGuard)
   @Post()
@@ -26,13 +33,21 @@ export class PostController {
     @Request() req,
   ) {
     const userId = req.user.sub;
-    
+
     return this.postService.create(createPostDto, files, userId);
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll(@Request() req){
+  findAll(@Request() req) {
     return this.postService.findAll(req.user.sub);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @Post('like')
+  likePost(@Body() likeDto: LikeDto, @Request() req) {
+    likeDto.userId = req.user.sub;
+    return this.likeService.likePost(likeDto);
   }
 }

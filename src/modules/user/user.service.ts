@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schema/user.schema';
 import { Model } from 'mongoose';
@@ -17,5 +17,29 @@ export class UserService {
 
   async findOne(username: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ username }).exec();
+  }
+
+  async uploadProfile(
+    userId: string,
+    file: Express.Multer.File,
+  ): Promise<{ statusCode: number; message: string }> {
+    try {
+      const updatedUser = await this.userModel
+        .findByIdAndUpdate(userId, {
+          profilePicture: file.path,
+        })
+        .exec();
+
+      if (!updatedUser) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      return {
+        statusCode: 200,
+        message: 'Upload profile successfuly',
+      };
+    } catch (error) {
+      throw { error };
+    }
   }
 }
